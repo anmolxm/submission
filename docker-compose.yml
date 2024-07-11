@@ -9,6 +9,8 @@ services:
       - "27017:27017"
 
   backend:
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
     container_name: backend
     build: ./backend  # Path to backend Dockerfile
     ports:
