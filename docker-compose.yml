@@ -9,21 +9,21 @@ services:
       - "27017:27017"
 
   backend:
-    environment:
-      - DOCKER_HOST=unix:///var/run/docker.sock
     container_name: backend
-    build: ./backend  # Path to backend Dockerfile
+    build:
+      context: ./backend  # Path to backend directory containing Dockerfile
     ports:
       - "5000:5000"
-    depends_on:
-      - mongodb
     environment:
       - NODE_ENV=production
-      - MONGO_URI=mongodb://mongo:27017/wanderlust  # MongoDB URI
+      - MONGO_URI=mongodb://mongo:27017/wanderlust
+    depends_on:
+      - mongodb
 
   frontend:
     container_name: frontend
-    build: ./frontend  # Path to frontend Dockerfile
+    build:
+      context: ./frontend  # Path to frontend directory containing Dockerfile
     ports:
       - "5173:5173"
     command: npm run dev -- --host
@@ -32,4 +32,3 @@ services:
 
 volumes:
   data:
-
