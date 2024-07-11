@@ -37,3 +37,4 @@ jobs:
             cd /home/ubuntu/wanderlust  # Replace with the path where your Docker-compose files are located on your EC2 instance
             docker-compose -f docker-compose.yml pull
             docker-compose -f docker-compose.yml up -d
+
