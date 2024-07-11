@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  mongodb:
+    container_name: mongo
+    image: mongo:latest
+    volumes:
+      - ./backend/data:/data
+    ports:
+      - "27017:27017"
+
+  backend:
+    container_name: backend
+    build: ./backend  # Path to backend Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+    environment:
+      - NODE_ENV=production
+      - MONGO_URI=mongodb://mongo:27017/wanderlust  # MongoDB URI
+
+  frontend:
+    container_name: frontend
+    build: ./frontend  # Path to frontend Dockerfile
+    ports:
+      - "5173:5173"
+    command: npm run dev -- --host
+    environment:
+      - VITE_API_BASE_URL=http://backend:5000/api
+
+volumes:
+  data:
+
