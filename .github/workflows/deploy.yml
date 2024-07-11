@@ -28,12 +28,21 @@ jobs:
           docker-compose -f docker-compose.yml push
 
       - name: SSH into EC2 and deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}  # Your EC2 instance's public IP
-          username: ubuntu  # Your EC2 instance's SSH username (default for Ubuntu)
-          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Reference to SSH private key stored in GitHub Secrets
-          script: |
-            cd /home/ubuntu/wanderlust  # Path where your Docker-compose files are located on your EC2 instance
-            docker-compose -f docker-compose.yml pull
-            docker-compose -f docker-compose.yml up -d
+  uses: appleboy/ssh-action@master
+  with:
+    host: ${{ secrets.EC2_HOST }}  # Your EC2 instance's public IP
+    username: ubuntu  # Your EC2 instance's SSH username (default for Ubuntu)
+    key: ${{ secrets.SSH_PRIVATE_KEY }}  # Reference to SSH private key stored in GitHub Secrets
+    script: |
+      set -e  # Exit script immediately on error
+      
+      echo "Starting deployment process..."
+      cd /home/ubuntu/wanderlust  # Path where your Docker-compose files are located on your EC2 instance
+      
+      echo "Pulling Docker images..."
+      docker-compose -f docker-compose.yml pull
+      
+      echo "Starting Docker containers..."
+      docker-compose -f docker-compose.yml up -d
+      
+      echo "Deployment completed successfully."
